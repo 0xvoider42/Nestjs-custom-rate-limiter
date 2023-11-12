@@ -19,7 +19,7 @@ describe('AppController (e2e)', () => {
     await app.close();
   });
 
-  describe('/ (GET)', () => {
+  describe('/app (GET)', () => {
     it('should return "This is public!"', async () => {
       return request(app.getHttpServer())
         .get('/app')
