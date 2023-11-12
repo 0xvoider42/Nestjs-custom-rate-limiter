@@ -73,7 +73,10 @@ describe('RateLimiter', () => {
 
       expect(mockNext).toHaveBeenCalledTimes(100);
       expect(mockResponse.status).toHaveBeenCalledWith(429);
-      expect(mockResponse.send).toHaveBeenCalledWith('Too Many Requests');
+      expect(mockResponse.send).toHaveBeenCalledWith({
+        message:
+          'Too Many Requests! MAX for the user: 100. Next request available in: 60 min.',
+      });
     });
   });
 
@@ -95,7 +98,10 @@ describe('RateLimiter', () => {
 
       expect(mockNext).toHaveBeenCalledTimes(200);
       expect(mockResponse.status).toHaveBeenCalledWith(429);
-      expect(mockResponse.send).toHaveBeenCalledWith('Too Many Requests');
+      expect(mockResponse.send).toHaveBeenCalledWith({
+        message:
+          'Too Many Requests! MAX for the user: 200. Next request available in: 60 min.',
+      });
     });
   });
 });
