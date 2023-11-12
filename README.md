@@ -18,6 +18,13 @@ $ npm run start:dev
 
 ```
 
+# Run in docker
+
+```bash
+# docker
+$ docker compose up
+```
+
 ## Test
 
 ```bash
