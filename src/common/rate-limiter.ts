@@ -22,7 +22,11 @@ export class IPRateLimiter implements NestMiddleware {
 
     const resetInterval = 60 * 60 * 1000;
     if (requestCount > maxRequests) {
-      return res.status(429).send('Too Many Requests');
+      const timeUntilReset = Math.ceil(resetInterval / 1000 / 60);
+
+      return res.status(429).send({
+        message: `Too Many Requests! MAX for the user: ${maxRequests}. Next request available in: ${timeUntilReset} min.`,
+      });
     }
 
     setTimeout(() => {
@@ -53,7 +57,11 @@ export class TokenRateLimiter implements NestMiddleware {
 
     const resetInterval = 60 * 60 * 1000;
     if (requestCount > maxRequests) {
-      return res.status(429).send('Too Many Requests');
+      const timeUntilReset = Math.ceil(resetInterval / 1000 / 60);
+
+      return res.status(429).send({
+        message: `Too Many Requests! MAX for the user: ${maxRequests}. Next request available in: ${timeUntilReset} min.`,
+      });
     }
 
     setTimeout(() => {
