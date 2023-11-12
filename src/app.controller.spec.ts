@@ -1,4 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
+
 import { AppService } from './app.service';
 import { AppModule } from './app.module';
 
@@ -18,9 +19,9 @@ describe('AppController', () => {
     await app.close();
   });
 
-  describe('root', () => {
+  describe('/app', () => {
     it('should return "This is public!" if public', () => {
-      const response = service.getHello();
+      const response = service.getPublicMessage();
 
       expect(response).toEqual({ message: 'This is public!' });
     });
