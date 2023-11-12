@@ -1,7 +1,11 @@
 ## Test assignment
 
-To setup the project after cloning the repo, run ```npm i``` then create ```.env``` file in root and copy ```.test.env``` contents to it.
-Then create a jwt token and paste it in the ```.env``` file. The given token will have an access to the private route if included in the request headers.
+To setup the project after cloning the repo, run ```npm i``` then create ```.env``` file in the root and copy ```.test.env``` contents.
+Then, paste a jwt token in the ```.env``` file. The given token will have access to the private route if included in the request headers.
+
+# Before tests
+
+To change the rate limit in tests, you need to adjust them in the ``mockConfigService`` manually.
 
 ## Running the app
 
