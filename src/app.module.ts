@@ -1,11 +1,13 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { MongooseModule } from '@nestjs/mongoose';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import defaultConfig from './common/config/index';
 import { IPRateLimiter, TokenRateLimiter } from './common/rate-limiter';
+import { Message, MessageSchema } from './schemas/message.schema';
 
 @Module({
   imports: [
@@ -14,6 +16,8 @@ import { IPRateLimiter, TokenRateLimiter } from './common/rate-limiter';
       isGlobal: true,
       envFilePath: '.env',
     }),
+    MongooseModule.forRoot(process.env.MONGO_URL),
+    MongooseModule.forFeature([{ name: Message.name, schema: MessageSchema }]),
     AuthModule,
     ConfigModule,
   ],

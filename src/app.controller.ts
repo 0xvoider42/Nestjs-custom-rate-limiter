@@ -8,14 +8,19 @@ import { GetPrivateResponse, GetPublicResponse } from './types';
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
+  @Get('/create')
+  async createMessages() {
+    await this.appService.create();
+  }
+
   @Get()
-  getPublic(): GetPublicResponse {
-    return this.appService.getPublicMessage();
+  async getPublic(): Promise<GetPublicResponse> {
+    return await this.appService.getPublicMessage();
   }
 
   @Get('/private')
   @UseGuards(CustomAuthGuard)
-  getPrivate(): GetPrivateResponse {
-    return this.appService.getPrivateMessage();
+  async getPrivate(): Promise<GetPrivateResponse> {
+    return await this.appService.getPrivateMessage();
   }
 }
