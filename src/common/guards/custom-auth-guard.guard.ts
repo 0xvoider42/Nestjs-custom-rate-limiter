@@ -13,6 +13,11 @@ export class CustomAuthGuard extends AuthGuard('jwt') {
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
     const request = context.switchToHttp().getRequest();
+
+    if (!request.headers.authorization) {
+      return super.canActivate(context);
+    }
+
     const token = request.headers.authorization.replace('bearer', '');
 
     if (token === this.configService.get<string>('userToken')) {

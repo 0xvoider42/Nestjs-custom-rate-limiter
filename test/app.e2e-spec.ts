@@ -20,24 +20,26 @@ describe('AppController (e2e)', () => {
   });
 
   describe('/app (GET)', () => {
-    it('should return "This is public!"', async () => {
+    it('should return "Public message"', async () => {
       return request(app.getHttpServer())
         .get('/app')
         .expect(200)
-        .then((res) => {
-          expect(res.body.message).toEqual('This is public!');
+        .then(async (res) => {
+          const message = await res.body.message;
+          expect(message).toEqual('Public message');
         });
     });
 
-    it('should return "This is private!"', async () => {
+    it('should return "Private message"', async () => {
       return request(app.getHttpServer())
         .get('/app/private')
         .set({
           Authorization: `${process.env.USER_TOKEN}`,
         })
         .expect(200)
-        .then((res) => {
-          expect(res.body.message).toEqual('This is private!');
+        .then(async (res) => {
+          const message = await res.body.message;
+          expect(message).toEqual('Private message');
         });
     });
   });

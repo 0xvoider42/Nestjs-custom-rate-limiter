@@ -16,25 +16,6 @@ services:
     command: npm run start:dev
     ports:
       - ${PORT:-3000}:${PORT:-3000}
-
-  postgres:
-    image: postgres
-    container_name: outvio-postgres
-    environment:
-      POSTGRES_USER: ${DATABASE_USER:-postgres}
-      POSTGRES_PASSWORD: ${DATABASE_PASSWORD:-password}
-      POSTGRES_DB: ${DATABASE_DB_NAME:-default_db}
-      PGDATA: /data/postgres
-    env_file:
-      - .env
-    volumes:
-      - postgres:/data/postgres
-    ports:
-      - ${DATABASE_PORT:-5433}:${DATABASE_PORT:-5433}
-    networks:
-      - app
-    command: -p ${DATABASE_PORT:-5433}
-
 networks:
   app:
     driver: bridge

@@ -20,16 +20,16 @@ describe('AppController', () => {
   });
 
   describe('/app', () => {
-    it('should return "This is public!" if public', () => {
-      const response = service.getPublicMessage();
+    it('should return "Public message" if public', async () => {
+      const response = await service.getPublicMessage();
 
-      expect(response).toEqual({ message: 'This is public!' });
+      expect(response).toEqual({ message: 'Public message' });
     });
 
-    it('should return "This is private!" if private', () => {
-      const response = service.getPrivateMessage();
+    it('should return "Private message" if private', async () => {
+      const response = await service.getPrivateMessage();
 
-      expect(response).toEqual({ message: 'This is private!' });
+      expect(response).toEqual({ message: 'Private message' });
     });
   });
 });
