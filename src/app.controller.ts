@@ -1,9 +1,11 @@
-import { Controller, Get, UseGuards } from '@nestjs/common';
+import { Controller, Get, UseGuards, UseInterceptors } from '@nestjs/common';
+import { CacheInterceptor } from '@nestjs/cache-manager';
 
 import { AppService } from './app.service';
 import { CustomAuthGuard } from './common/guards/custom-auth-guard.guard';
 import { GetPrivateResponse, GetPublicResponse } from './types';
 
+@UseInterceptors(CacheInterceptor)
 @Controller('/app')
 export class AppController {
   constructor(private readonly appService: AppService) {}

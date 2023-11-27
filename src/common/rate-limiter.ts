@@ -1,24 +1,32 @@
-import { Injectable, NestMiddleware } from '@nestjs/common';
+import { Inject, Injectable, NestMiddleware } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Cache } from 'cache-manager';
 import { Request, Response } from 'express';
+import { RedisService } from './redis.service';
 
 @Injectable()
 export class IPRateLimiter implements NestMiddleware {
-  constructor(private readonly configService: ConfigService) {}
+  constructor(
+    @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
+    private readonly redisService: RedisService,
+    private readonly configService: ConfigService,
+  ) {}
 
-  private requestCount = new Map<string, number>();
-
-  use(req: Request, res: Response, next: () => void) {
+  async use(req: Request, res: Response, next: () => void) {
     const clientIp = req.ip;
+    const checkCache = await this.redisService.redisClient.get(clientIp);
 
-    if (!this.requestCount.has(clientIp)) {
-      this.requestCount.set(clientIp, 0);
+    if (!checkCache) {
+      await this.redisService.redisClient.set(clientIp, 0);
     }
 
     const maxRequests = this.configService.get('rateLimitIP');
 
-    const requestCount = this.requestCount.get(clientIp) + 1;
-    this.requestCount.set(clientIp, requestCount);
+    const requestCount = await this.redisService.redisClient.get(clientIp);
+    requestCount + 1;
+
+    await this.redisService.redisClient.set(clientIp, requestCount);
 
     const resetInterval = 60 * 60 * 1000;
     if (requestCount > maxRequests) {
@@ -29,8 +37,8 @@ export class IPRateLimiter implements NestMiddleware {
       });
     }
 
-    setTimeout(() => {
-      this.requestCount.set(clientIp, 0);
+    setTimeout(async () => {
+      await this.redisService.redisClient.set(clientIp, 0);
     }, resetInterval);
 
     next();
@@ -39,21 +47,26 @@ export class IPRateLimiter implements NestMiddleware {
 
 @Injectable()
 export class TokenRateLimiter implements NestMiddleware {
-  constructor(private readonly configService: ConfigService) {}
+  constructor(
+    @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
+    private readonly redisService: RedisService,
+    private readonly configService: ConfigService,
+  ) {}
 
-  private requestCount = new Map<string, number>();
-
-  use(req: Request, res: Response, next: () => void) {
+  async use(req: Request, res: Response, next: () => void) {
     const userToken = req.headers.authorization;
+    const checkCache = await this.redisService.redisClient.get(userToken);
 
-    if (!this.requestCount.has(userToken)) {
-      this.requestCount.set(userToken, 0);
+    if (!checkCache) {
+      await this.redisService.redisClient.set(userToken, 0);
     }
 
     const maxRequests = this.configService.get('rateLimitToken');
 
-    const requestCount = this.requestCount.get(userToken) + 1;
-    this.requestCount.set(userToken, requestCount);
+    const requestCount = await this.redisService.redisClient.get(userToken);
+    requestCount + 1;
+
+    await this.redisService.redisClient.set(userToken, requestCount);
 
     const resetInterval = 60 * 60 * 1000;
     if (requestCount > maxRequests) {
@@ -64,8 +77,8 @@ export class TokenRateLimiter implements NestMiddleware {
       });
     }
 
-    setTimeout(() => {
-      this.requestCount.set(userToken, 0);
+    setTimeout(async () => {
+      await this.redisService.redisClient.set(userToken, 0);
     }, resetInterval);
 
     next();
