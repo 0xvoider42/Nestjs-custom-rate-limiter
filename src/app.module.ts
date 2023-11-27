@@ -10,6 +10,7 @@ import { AuthModule } from './auth/auth.module';
 import defaultConfig from './common/config/index';
 import { IPRateLimiter, TokenRateLimiter } from './common/rate-limiter';
 import { Message, MessageSchema } from './schemas/message.schema';
+import { RedisModule } from './common/redis.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { Message, MessageSchema } from './schemas/message.schema';
     MongooseModule.forFeature([{ name: Message.name, schema: MessageSchema }]),
     AuthModule,
     ConfigModule,
+    RedisModule,
   ],
   controllers: [AppController],
   providers: [AppService],

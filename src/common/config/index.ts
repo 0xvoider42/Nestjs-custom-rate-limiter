@@ -5,4 +5,5 @@ export default () => ({
   rateLimitToken: process.env.RATE_LIMIT_TOKEN,
   mongoUrl: process.env.MONGO_URL,
   saltRot: process.env.SALT_NUM,
+  redisUrl: process.env.REDIS_URL,
 });
