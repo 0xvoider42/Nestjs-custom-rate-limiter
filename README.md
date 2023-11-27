@@ -11,6 +11,10 @@ To change the rate limit in tests, you need to adjust them in the ``mockConfigSe
 ## Running the app
 
 ```bash
+# install redis
+$ redis-server
+after server starts, app is ready to accept requests
+
 # seeding database
 $ http://localhost:3000/app/crate
 
